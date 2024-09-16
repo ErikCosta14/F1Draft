@@ -8,8 +8,113 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		Scanner teclado = new Scanner(System.in);
-		Random aletorio = new Random();
+		Random aleatorio = new Random();
+		//vetores para atribuir os códigos deacesso dos vetores de banco de dados
+		String circuitos[] = {"BRASIL", "BAHREIN", "INGLATERRA", "AUSTRIA", "ESPANHA", "MONACO", "BELGICA", "ITALIA", "EMILIA-ROMAGNHA", "JAPAO"};
+		String carros[] = {"ASTON MARTIN", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
+		String chefes[] = {"HORNER", "WOLFF", "VANSSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
+		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "HAMILTON", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
+				"RUSSEL", "ANTONELLI", "VERSTAPPEN", "PEREZ", "HULKENBERG", "BORTOLETO", "TSUNODA", "LAWSOM", "ALBON", "SAINZ"};
+		String circJogo[];
+		String confgCirc;
+		boolean menu;
+		boolean circVal;
+		int opcPrinc;
+		int tmnMostr;
+		int numCirc;
 		
+		menu = true; //Iniciando o menu
+		
+		while(menu) {
+			limpaTela(2);
+			System.out.println("|=======================================================|");
+			System.out.println("|===================MENU PRINCIPAL======================|");
+			System.out.println("|=======================================================|");
+			System.out.println("|                     1 - JOGAR                         |");
+			System.out.println("|                     2 - SAIR                          |");
+			System.out.println("|=======================================================|");
+			System.out.print(" Digite a opção que deseja(Apenas números): ");
+			opcPrinc = teclado.nextInt();
+			
+			switch(opcPrinc) {
+				case 1:
+					limpaTela(2);
+					//Iniciando o game
+					System.out.println("|=======================================================|");
+					System.out.println("|================FASE DE CONFIGURAÇÃO===================|");
+					System.out.println("|=======================================================|");
+					
+					System.out.println("|===============Circuitos disponíveis===================|");
+					tmnMostr = 0;
+					for (int i = 0; i < circuitos.length; i++) {
+						tmnMostr += (circuitos[i].length() + 1);
+						tmnMostr = limitMenu(tmnMostr);
+						
+						System.out.printf(" %s;", circuitos[i]);
+					}
+					//pedindo o jogador para selecionar os circuitos que deseja jogar
+					System.out.println();
+					System.out.println("|=======================================================|");
+					System.out.println("|=Digite os circuitos que você deseja igual ao exemplo:=|");
+					System.out.println("|            exp: Brasil;Italia;...(sem espaços)        |");
+					System.out.println("|=======================================================|");
+					System.out.print(" Digite aqui: ");
+					confgCirc = teclado.next();
+					
+					circJogo = confgCirc.split(";"); //separando em um vetor os circuitos
+					circVal = true;
+					
+					//conferindo se o circuito é válido
+					for (int i = 0; i < circJogo.length; i++) {
+						circJogo[i] = circJogo[i].toUpperCase();
+						
+						if (circuito(circJogo[i]).equals("")) {
+							System.out.printf("\n O circuito %s não está disponível! Reinicie o jogo!\n", circJogo[i]);
+							circVal = false;
+							break;
+						}
+						else {
+							circVal = true;
+						}
+					}
+					
+					if(circVal == false) {
+						break;
+					}else {
+						numCirc = circJogo.length; //Definindo quantos circuitos terão no jogo
+						
+						//Mostrando os players disponiveis para aquele jogo
+						limpaTela(1);
+						System.out.println("|=======================================================|");
+						System.out.println("|=================Opcões de piloto 1====================|");
+						System.out.println("|  NOME | SUA | TEMP RESP | EMO | AGRE | TRB EQP | OVR  |");
+						select(1);
+						
+						System.out.println("|=================Opcões de piloto 2====================|");
+						System.out.println("|  NOME | SUA | TEMP RESP | EMO | AGRE | TRB EQP | OVR  |");
+						select(1);
+					}
+					
+					break;
+				case 2:
+					limpaTela(1);
+					System.out.println("|=======================================================|");
+					System.out.println("|====================JOGO FECHADO=======================|");
+					System.out.println("|=======================================================|");
+					limpaTela(2);
+					
+					//Finalizando o jogo
+					menu = false;
+					break;
+				default:
+					limpaTela(1);
+					//Caso a opção não exista no menu, pedindo para escolher uma diferente
+					System.out.println("|=======================================================|");
+					System.out.println("|========OPÇÃO INVALIDA ESCOLHA UMA DIFERENTE===========|");
+					System.out.println("|=======================================================|");
+					break;
+			}
+		}
 		
 		teclado.close();
 
@@ -28,6 +133,20 @@ public class Principal {
 				System.out.println("");
 			}
 		}
+		
+	}
+	
+	//Função para definir o tamanho do menu
+	static int limitMenu(int tmn) {
+		
+		final int tamMenu = 57;
+		
+		if(tmn >= tamMenu) {
+			tmn = 0;
+			System.out.println("");
+		}
+		
+		return tmn;
 		
 	}
 	
@@ -101,17 +220,17 @@ public class Principal {
 				atributos[1] = 7; //Motor
 				atributos[2] = 7; //Velocidade
 				atributos[3] = 9; //Eficiência no DRS
-				atributos[4] = 10; //Eficiência no ERS
+				atributos[4] = 9; //Eficiência no ERS
 				
 				mediaAtrib = media(atributos);
 				
 				break;
 			case "REDBULL":
 				nome = "RedBull";
-				atributos[0] = 9; //Aerodinâmica
-				atributos[1] = 10; //Motor
-				atributos[2] = 9; //Velocidade
-				atributos[3] = 10; //Eficiência no DRS
+				atributos[0] = 8; //Aerodinâmica
+				atributos[1] = 9; //Motor
+				atributos[2] = 8; //Velocidade
+				atributos[3] = 7; //Eficiência no DRS
 				atributos[4] = 8; //Eficiência no ERS
 				
 				mediaAtrib = media(atributos);
@@ -163,7 +282,7 @@ public class Principal {
 					+ ";" + atributos[4] + ";" + mediaAtrib;
 		}
 		else {
-			return "Carro inválido";
+			return "";
 		}
 	
 	}
@@ -192,7 +311,7 @@ public class Principal {
 		
 		switch (piloto) {			
 			case "ALONSO":
-				nome = "Fernando Alonso";
+				nome = "Alonso";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 6; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -203,7 +322,7 @@ public class Principal {
 				
 				break;
 			case "STROLL":
-				nome = "Lance Stroll";
+				nome = "Stroll";
 				atributos[0] = 6; //Suavidade
 				atributos[1] = 4; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -214,7 +333,7 @@ public class Principal {
 				
 				break;
 			case "GASLY":
-				nome = "Pierre Gasly";
+				nome = "Gasly";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 8; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -225,7 +344,7 @@ public class Principal {
 				
 				break;
 			case "DOOHAN":
-				nome = "Jack Doohan";
+				nome = "Doohan";
 				atributos[0] = 6; //Suavidade
 				atributos[1] = 4; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -236,7 +355,7 @@ public class Principal {
 				
 				break;
 			case "LECLERC":
-				nome = "Charles Leclerc";
+				nome = "Leclerc";
 				atributos[0] = 9; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 7; //Controle emocional
@@ -247,7 +366,7 @@ public class Principal {
 				
 				break;
 			case "HAMILTON":
-				nome = "Lewis Hamilton";
+				nome = "Lewis";
 				atributos[0] = 8; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 9; //Controle emocional
@@ -258,7 +377,7 @@ public class Principal {
 				
 				break;
 			case "BEARMAN":
-				nome = "Oliver Bearman";
+				nome = "Bearman";
 				atributos[0] = 4; //Suavidade
 				atributos[1] = 5; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -269,7 +388,7 @@ public class Principal {
 				
 				break;
 			case "OCON":
-				nome = "Esteban Ocon";
+				nome = "Ocon";
 				atributos[0] = 6; //Suavidade
 				atributos[1] = 4; //Tempo de resposta
 				atributos[2] = 3; //Controle emocional
@@ -280,7 +399,7 @@ public class Principal {
 				
 				break;
 			case "NORRIS":
-				nome = "Lando Norris";
+				nome = "Norris";
 				atributos[0] = 8; //Suavidade
 				atributos[1] = 9; //Tempo de resposta
 				atributos[2] = 8; //Controle emocional
@@ -291,7 +410,7 @@ public class Principal {
 				
 				break;
 			case "PIASTRI":
-				nome = "Oscar Piastri";
+				nome = "Piastri";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 9; //Controle emocional
@@ -302,7 +421,7 @@ public class Principal {
 				
 				break;
 			case "RUSSEL":
-				nome = "George Russel";
+				nome = "Russel";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 8; //Controle emocional
@@ -313,7 +432,7 @@ public class Principal {
 				
 				break;
 			case "ANTONELLI":
-				nome = "Kimi Antonelli";
+				nome = "Kimi";
 				atributos[0] = 6; //Suavidade
 				atributos[1] = 5; //Tempo de resposta
 				atributos[2] = 5; //Controle emocional
@@ -324,18 +443,29 @@ public class Principal {
 				
 				break;
 			case "VERSTAPPEN":
-				nome = "Max Verstappen";
+				nome = "Max";
 				atributos[0] = 8; //Suavidade
-				atributos[1] = 10; //Tempo de resposta
+				atributos[1] = 9; //Tempo de resposta
 				atributos[2] = 7; //Controle emocional
-				atributos[3] = 10; //Agressividade
+				atributos[3] = 9; //Agressividade
 				atributos[4] = 8; //Trabalho em equipe
 				
 				mediaAtrib = media(atributos);
 				
 				break;
+			case "PEREZ":
+				nome = "Perez";
+				atributos[0] = 7; //Suavidade
+				atributos[1] = 5; //Tempo de resposta
+				atributos[2] = 7; //Controle emocional
+				atributos[3] = 6; //Agressividade
+				atributos[4] = 9; //Trabalho em equipe
+				
+				mediaAtrib = media(atributos);
+				
+				break;
 			case "HULKENBERG":
-				nome = "Nico Hulkenberg";
+				nome = "Nico";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 6; //Controle emocional
@@ -346,7 +476,7 @@ public class Principal {
 				
 				break;
 			case "BORTOLETO":
-				nome = "Gabriel Bortoleto";
+				nome = "Gabriel";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 9; //Controle emocional
@@ -357,7 +487,7 @@ public class Principal {
 				
 				break;
 			case "TSUNODA":
-				nome = "Yuki Tsunoda";
+				nome = "Yuki";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 6; //Tempo de resposta
 				atributos[2] = 3; //Controle emocional
@@ -368,7 +498,7 @@ public class Principal {
 				
 				break;
 			case "LAWSOM":
-				nome = "Liam Lawsom";
+				nome = "Lawsom";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 6; //Tempo de resposta
 				atributos[2] = 8; //Controle emocional
@@ -379,7 +509,7 @@ public class Principal {
 				
 				break;
 			case "ALBON":
-				nome = "Alexander Albon";
+				nome = "Albon";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 8; //Tempo de resposta
 				atributos[2] = 8; //Controle emocional
@@ -390,7 +520,7 @@ public class Principal {
 				
 				break;
 			case "SAINZ":
-				nome = "Carlos Sainz";
+				nome = "Sainz";
 				atributos[0] = 8; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
 				atributos[2] = 9; //Controle emocional
@@ -413,7 +543,7 @@ public class Principal {
 					+ ";" + atributos[4] + ";" + mediaAtrib;
 		}
 		else {
-			return "Piloto inválido";
+			return "";
 		}
 		
 	}
@@ -422,7 +552,7 @@ public class Principal {
 	static String circuito (String circuito) {
 		
 		String nome;
-		int infoCirc[] = new int [4];
+		int infoCirc[] = new int [5];
 		
 		switch (circuito) {
 			case "BRASIL":
@@ -432,6 +562,7 @@ public class Principal {
 				infoCirc[1] = 15; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 50; //Chance de chuva leve
 				infoCirc[3] = 20; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			case "BAHREIN":
@@ -441,6 +572,7 @@ public class Principal {
 				infoCirc[1] = 20; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 10; //Chance de chuva leve
 				infoCirc[3] = 2; //Chance de chuva pesada
+				infoCirc[4] = 2;  //Paradas perfeitas
 				
 				break;
 			case "INGLATERRA":
@@ -450,6 +582,7 @@ public class Principal {
 				infoCirc[1] = 15; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 44; //Chance de chuva leve
 				infoCirc[3] = 25; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			case "AUSTRIA":
@@ -459,6 +592,7 @@ public class Principal {
 				infoCirc[1] = 25; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 30; //Chance de chuva leve
 				infoCirc[3] = 15; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			case "ESPANHA":
@@ -468,6 +602,7 @@ public class Principal {
 				infoCirc[1] = 33; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 30; //Chance de chuva leve
 				infoCirc[3] = 13; //Chance de chuva pesada
+				infoCirc[4] = 2;  //Paradas perfeitas
 				
 				break;
 			case "MONACO":
@@ -477,6 +612,7 @@ public class Principal {
 				infoCirc[1] = 80; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 75; //Chance de chuva leve
 				infoCirc[3] = 10; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			case "BELGICA":
@@ -486,6 +622,7 @@ public class Principal {
 				infoCirc[1] = 44; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 55; //Chance de chuva leve
 				infoCirc[3] = 25; //Chance de chuva pesada
+				infoCirc[4] = 3;  //Paradas perfeitas
 				
 				break;
 			case "ITALIA":
@@ -495,6 +632,7 @@ public class Principal {
 				infoCirc[1] = 10; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 25; //Chance de chuva leve
 				infoCirc[3] = 10; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			case "EMILIA-ROMAGNHA":
@@ -504,6 +642,7 @@ public class Principal {
 				infoCirc[1] = 50; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 30; //Chance de chuva leve
 				infoCirc[3] = 6; //Chance de chuva pesada
+				infoCirc[4] = 2;  //Paradas perfeitas
 				
 				break;
 			case "JAPAO":
@@ -513,6 +652,7 @@ public class Principal {
 				infoCirc[1] = 60; //Chance de SafetyCar em porcentagem
 				infoCirc[2] = 70; //Chance de chuva leve
 				infoCirc[3] = 17; //Chance de chuva pesada
+				infoCirc[4] = 1;  //Paradas perfeitas
 				
 				break;
 			default:
@@ -529,7 +669,7 @@ public class Principal {
 			return  nome + ";" + infoCirc[0] + ";" + infoCirc[1] + ";" + infoCirc[2] + ";" + infoCirc[3];
 		}
 		else {
-			return "Este circuito não está disponível!!";
+			return "";
 		}
 		
 	}
@@ -548,6 +688,7 @@ public class Principal {
 				atrbChefe[1] = 8; //Estratégia
 				atrbChefe[2] = 6; //Gestão de pessoas
 				atrbChefe[3] = 8; //Apelo patrocinio
+				atrbChefe[4] = 7; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -559,6 +700,7 @@ public class Principal {
 				atrbChefe[1] = 7; //Estratégia
 				atrbChefe[2] = 8; //Gestão de pessoas
 				atrbChefe[3] = 9; //Apelo patrocinio
+				atrbChefe[4] = 8; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -570,6 +712,7 @@ public class Principal {
 				atrbChefe[1] = 6; //Estratégia
 				atrbChefe[2] = 8; //Gestão de pessoas
 				atrbChefe[3] = 7; //Apelo patrocinio
+				atrbChefe[4] = 8; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -581,6 +724,7 @@ public class Principal {
 				atrbChefe[1] = 7; //Estratégia
 				atrbChefe[2] = 9; //Gestão de pessoas
 				atrbChefe[3] = 10; //Apelo patrocinio
+				atrbChefe[4] = 9; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -592,6 +736,7 @@ public class Principal {
 				atrbChefe[1] = 7; //Estratégia
 				atrbChefe[2] = 6; //Gestão de pessoas
 				atrbChefe[3] = 5; //Apelo patrocinio
+				atrbChefe[4] = 6; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -603,6 +748,7 @@ public class Principal {
 				atrbChefe[1] = 4; //Estratégia
 				atrbChefe[2] = 2; //Gestão de pessoas
 				atrbChefe[3] = 4; //Apelo patrocinio
+				atrbChefe[4] = 3; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -614,6 +760,7 @@ public class Principal {
 				atrbChefe[1] = 5; //Estratégia
 				atrbChefe[2] = 6; //Gestão de pessoas
 				atrbChefe[3] = 5; //Apelo patrocinio
+				atrbChefe[4] = 6; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -625,6 +772,7 @@ public class Principal {
 				atrbChefe[1] = 4; //Estratégia
 				atrbChefe[2] = 5; //Gestão de pessoas
 				atrbChefe[3] = 4; //Apelo patrocinio
+				atrbChefe[4] = 3; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -636,6 +784,7 @@ public class Principal {
 				atrbChefe[1] = 3; //Estratégia
 				atrbChefe[2] = 4; //Gestão de pessoas
 				atrbChefe[3] = 2; //Apelo patrocinio
+				atrbChefe[4] = 2; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -647,6 +796,7 @@ public class Principal {
 				atrbChefe[1] = 7; //Estratégia
 				atrbChefe[2] = 6; //Gestão de pessoas
 				atrbChefe[3] = 6; //Apelo patrocinio
+				atrbChefe[4] = 7; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
@@ -664,9 +814,85 @@ public class Principal {
 				 + ";" + mediaAtrb;
 		}
 		else {
-			return "Chefe de equipe invalido!!";
+			return "";
 		}
 		
 	}
 	
+	static void select (int indice) {
+		
+		Random aleatorio = new Random();
+		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "HAMILTON", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
+				"RUSSEL", "ANTONELLI", "VERSTAPPEN", "PEREZ", "HULKENBERG", "BORTOLETO", "TSUNODA", "LAWSOM", "ALBON", "SAINZ"};
+		String atrbPilo[];
+		String confgPilo;
+		int numPil;
+		int tmnAtrb;
+		int numFoi[];
+		
+		if (indice == 1) {
+			numFoi = new int[3];
+			
+			for (int i = 1; i <= 3; i++) {
+				numPil = aleatorio.nextInt(1, 20);
+				
+				for (int j = 0; j < numFoi.length; j++) {
+					if (numFoi[j] != 0) {
+						if (numFoi[j] == numPil) {
+							numPil = aleatorio.nextInt(1, 20);
+							j = -1;
+						}
+					}
+				}
+				confgPilo = pilotos(pilotos[numPil - 1]);
+				atrbPilo = confgPilo.split(";");
+				
+				for (int j = 0; j < atrbPilo.length; j++) {
+					System.out.print("|");
+					tmnAtrb = 0;
+					
+					if (j == 0) {
+						tmnAtrb += atrbPilo[j].length();
+						System.out.printf("%s", atrbPilo[j]);
+						while (tmnAtrb < 7) {
+							System.out.print(" ");
+							tmnAtrb++;
+						}
+					}
+					else if (j == 1) {
+						System.out.print("  ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("  ");
+					}
+					else if (j == 2) {
+						System.out.print("     ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("     ");
+					}
+					else if (j == 3) {
+						System.out.print("  ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("  ");
+					}
+					else if (j == 4) {
+						System.out.print("  ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("   ");
+					}
+					else if (j == 5) {
+						System.out.print("    ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("    ");
+					}
+					else {
+						System.out.print("  ");
+						System.out.printf("%s", atrbPilo[j]);
+						System.out.print("   ");
+					}
+				}
+				System.out.println("|");
+			}
+		}
+		
+	}
 }
