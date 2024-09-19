@@ -11,15 +11,21 @@ public class Principal {
 		Random aleatorio = new Random();
 		//vetores para atribuir os códigos deacesso dos vetores de banco de dados
 		String circuitos[] = {"BRASIL", "BAHREIN", "INGLATERRA", "AUSTRIA", "ESPANHA", "MONACO", "BELGICA", "ITALIA", "EMILIA-ROMAGNHA", "JAPAO"};
-		String carros[] = {"ASTON MARTIN", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
-		String chefes[] = {"HORNER", "WOLFF", "VANSSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
-		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "HAMILTON", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
-				"RUSSEL", "ANTONELLI", "VERSTAPPEN", "PEREZ", "HULKENBERG", "BORTOLETO", "TSUNODA", "LAWSOM", "ALBON", "SAINZ"};
+		String carros[] = {"ASTON", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
+		String chefes[] = {"HORNER", "WOLFF", "VASSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
+		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "LEWIS", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
+				"RUSSEL", "KIMI", "MAX", "PEREZ", "NICO", "GABRIEL", "YUKI", "LAWSOM", "ALBON", "SAINZ"};
 		String circJogo[];
+		String equipSel[] = new String[4];
 		String confgCirc;
+		String confgJog;
+		String vetAtr[];
+		String varAtr;
 		boolean menu;
 		boolean circVal;
+		int atrbEquip[][] = new int[4][6];
 		int opcPrinc;
+		int cont = 1;
 		int tmnMostr;
 		int numCirc;
 		
@@ -93,6 +99,51 @@ public class Principal {
 						System.out.println("|=================Opcões de piloto 2====================|");
 						System.out.println("|  NOME | SUA | TEMP RESP | EMO | AGRE | TRB EQP | OVR  |");
 						select(1);
+						
+						System.out.println("|==============Opcões de chefe de equipe================|");
+						System.out.println("|  NOME | LID | ESTR | GST PSS | PATR | DES CORR | OVR  |");
+						select(2);
+						
+						System.out.println("|==================Opcões de carros=====================|");
+						System.out.println("|  NOME  | AER | MOTR | VELO | EFI DRS | EFI ERS | OVR  |");
+						select(3);
+						System.out.println("|=======================================================|");
+						System.out.println("|=====Selecione uma opção de cada como no exemplo:======|");
+						System.out.println("|=============exp: Max;Gabriel;Wolff;Aston==============|");
+						System.out.printf(" Digite aqui suas opções: ");
+						confgJog = teclado.next();
+						
+						equipSel = confgJog.split(";"); //equipe digitada vai para um vetor
+						
+						//Adicionando os atributos da equipe em uma matriz para facilitar
+						for(int i = 0; i < atrbEquip.length; i++) {
+							cont = 1;
+							for(int j = 0; j < atrbEquip[i].length; j++) {
+								if (i == 0 || i == 1) {
+									vetAtr = pilotos(equipSel[i].toUpperCase()).split(";");
+									varAtr = vetAtr[cont];
+									atrbEquip[i][j] = Integer.parseInt(varAtr);
+									cont++;
+								}
+								else if (i == 2) {
+									vetAtr = chefe(equipSel[i].toUpperCase()).split(";");
+									varAtr = vetAtr[cont];
+									atrbEquip[i][j] = Integer.parseInt(varAtr);
+									cont++;
+								}
+								else {
+									vetAtr = carro(equipSel[i].toUpperCase()).split(";");
+									varAtr = vetAtr[cont];
+									atrbEquip[i][j] = Integer.parseInt(varAtr);
+									cont++;
+								}
+							}
+							cont++;
+						} //Definições: 1 linha: piloto 1, 2 linha: piloto 2, 3 linha: chefe, 4 linha: carro
+						
+						//configurações terminadas
+						
+						jogoIni(numCirc, circJogo, equipSel, atrbEquip); //chamando a função para iniciar o jogo
 					}
 					
 					break;
@@ -150,6 +201,39 @@ public class Principal {
 		
 	}
 	
+	//função para centralizar alguma palavra de acordo com o menu
+	static void centerMenu(int tmPal, String Pal) {
+		
+		int tmnCirc;
+		int tmnAntCic;
+		int sobraTmn;
+		int cont;
+		
+		tmnCirc = 55 - tmPal;
+		sobraTmn = tmnCirc % 2;
+		tmnAntCic = tmnCirc / 2;
+		tmnCirc /= 2;
+		
+		if(sobraTmn != 0) {
+			tmnCirc += sobraTmn;
+		}
+		
+		System.out.print("|");
+		cont = 0;
+		while ( cont < tmnAntCic) {
+			System.out.print(" ");
+			cont++;
+		}
+		System.out.printf("%s", Pal); //centralizando o nome do circuito na tela
+		cont = 0;
+		while ( cont < tmnCirc) {
+			System.out.print(" ");
+			cont++;
+		}
+		System.out.print("|\n");
+		
+	}
+	
 	//Função para escolher o carro
 	static String carro(String carro) {
 		
@@ -159,8 +243,8 @@ public class Principal {
 		
 		//A variável carro é analizada para determinar qual foi escolhida e atribuir os atributos no vetor
 		switch (carro) {
-			case "ASTON MARTIN":
-				nome = "Aston Martin";
+			case "ASTON":
+				nome = "Aston";
 				atributos[0] = 4; //Aerodinâmica
 				atributos[1] = 7; //Motor
 				atributos[2] = 7; //Velocidade
@@ -248,7 +332,7 @@ public class Principal {
 				
 				break;
 			case "VCARB":
-				nome = "VICARB";
+				nome = "VCARB";
 				atributos[0] = 6; //Aerodinâmica
 				atributos[1] = 7; //Motor
 				atributos[2] = 6; //Velocidade
@@ -299,6 +383,45 @@ public class Principal {
 		mediaTot /= media.length;
 		
 		return mediaTot;
+		
+	}
+	
+	//Função para mostrar pneus disponíveis e suas estatísticas
+	static void pneus() {
+		
+		String nomePneus[] = {"Macio(S)", "Médio(M)", "Duro(H)", "Intermediário(I)", "Chuva(W)"};
+		int pneus[][] = {
+				{100, 20, 20, 15}, //S
+				{85,  35, 20, 15}, //M
+				{75,  40, 20, 15}, //H
+				{70, 45, 100, 60}, //I
+				{65, 50, 60, 100}  //W
+		};
+		
+		System.out.println("|      NOME      | ADER | DURAB | CHUV LEVE | CHUV PESA |");
+		for (int j = 0; j < pneus.length; j++) {
+			if(j == 0) {
+				System.out.printf("|    %s    |  %d |  %d   |    %d     |    %d     |\n", nomePneus[j], pneus[j][0], 
+						pneus[j][1], pneus[j][2], pneus[j][3]);
+			}
+			else if (j == 1) {
+				System.out.printf("|    %s    |  %d  |  %d   |    %d     |    %d     |\n", nomePneus[j], pneus[j][0], 
+						pneus[j][1], pneus[j][2], pneus[j][3]);
+			}
+			else if (j == 2) {
+				System.out.printf("|    %s     |  %d  |  %d   |    %d     |    %d     |\n", nomePneus[j], pneus[j][0], 
+						pneus[j][1], pneus[j][2], pneus[j][3]);
+			}
+			else if (j == 3){
+				System.out.printf("|%s|  %d  |  %d   |    %d    |    %d     |\n", nomePneus[j], pneus[j][0], 
+						pneus[j][1], pneus[j][2], pneus[j][3]);
+			}
+			else {
+				System.out.printf("|     %s   |  %d  |  %d   |    %d     |    %d    |\n", nomePneus[j], pneus[j][0], 
+						pneus[j][1], pneus[j][2], pneus[j][3]);
+			}
+		}
+		System.out.println("|=======================================================|");
 		
 	}
 	
@@ -365,7 +488,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "HAMILTON":
+			case "LEWIS":
 				nome = "Lewis";
 				atributos[0] = 8; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
@@ -431,7 +554,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "ANTONELLI":
+			case "KIMI":
 				nome = "Kimi";
 				atributos[0] = 6; //Suavidade
 				atributos[1] = 5; //Tempo de resposta
@@ -442,7 +565,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "VERSTAPPEN":
+			case "MAX":
 				nome = "Max";
 				atributos[0] = 8; //Suavidade
 				atributos[1] = 9; //Tempo de resposta
@@ -464,7 +587,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "HULKENBERG":
+			case "NICO":
 				nome = "Nico";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
@@ -475,7 +598,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "BORTOLETO":
+			case "GABRIEL":
 				nome = "Gabriel";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 7; //Tempo de resposta
@@ -486,7 +609,7 @@ public class Principal {
 				mediaAtrib = media(atributos);
 				
 				break;
-			case "TSUNODA":
+			case "YUKI":
 				nome = "Yuki";
 				atributos[0] = 7; //Suavidade
 				atributos[1] = 6; //Tempo de resposta
@@ -666,7 +789,7 @@ public class Principal {
 		
 		//Retorna apenas se o circuito estiver disponível
 		if (nome != "" && infoCirc[0] != 0) {
-			return  nome + ";" + infoCirc[0] + ";" + infoCirc[1] + ";" + infoCirc[2] + ";" + infoCirc[3];
+			return  nome + ";" + infoCirc[0] + ";" + infoCirc[1] + ";" + infoCirc[2] + ";" + infoCirc[3] + ";" + infoCirc[4];
 		}
 		else {
 			return "";
@@ -674,15 +797,15 @@ public class Principal {
 		
 	}
 	
-	static String chefes (String chefe) {
+	static String chefe(String chefe) {
 		
 		String nome;
-		int atrbChefe[] = new int [4];
+		int atrbChefe[] = new int [5];
 		int mediaAtrb;
 		
 		switch (chefe) {
 			case "HORNER":
-				nome = "Christian Horner";
+				nome = "Horner";
 				
 				atrbChefe[0] = 7; //Liderança
 				atrbChefe[1] = 8; //Estratégia
@@ -694,7 +817,7 @@ public class Principal {
 				
 				break;
 			case "WOLFF":
-				nome = "Toto Wolff";
+				nome = "Wolff";
 				
 				atrbChefe[0] = 9; //Liderança
 				atrbChefe[1] = 7; //Estratégia
@@ -705,8 +828,8 @@ public class Principal {
 				mediaAtrb = media(atrbChefe);
 				
 				break;
-			case "VANSSEUR":
-				nome = "Frédéric Vasseur";
+			case "VASSEUR":
+				nome = "Vasseur";
 				
 				atrbChefe[0] = 7; //Liderança
 				atrbChefe[1] = 6; //Estratégia
@@ -718,19 +841,19 @@ public class Principal {
 				
 				break;
 			case "BROWN":
-				nome = "Zak Brown";
+				nome = "Brown";
 				
 				atrbChefe[0] = 9; //Liderança
 				atrbChefe[1] = 7; //Estratégia
 				atrbChefe[2] = 9; //Gestão de pessoas
-				atrbChefe[3] = 10; //Apelo patrocinio
+				atrbChefe[3] = 9; //Apelo patrocinio
 				atrbChefe[4] = 9; //Desempenho em corrida
 				
 				mediaAtrb = media(atrbChefe);
 				
 				break;
 			case "KRACK":
-				nome = "Mike Krack";
+				nome = "Krack";
 				
 				atrbChefe[0] = 6; //Liderança
 				atrbChefe[1] = 7; //Estratégia
@@ -742,7 +865,7 @@ public class Principal {
 				
 				break;
 			case "FAMIN":
-				nome = "Bruno Famin";
+				nome = "Famin";
 				
 				atrbChefe[0] = 5; //Liderança
 				atrbChefe[1] = 4; //Estratégia
@@ -754,7 +877,7 @@ public class Principal {
 				
 				break;
 			case "VOWLES":
-				nome = "James Vowles";
+				nome = "Vowles";
 				
 				atrbChefe[0] = 6; //Liderança
 				atrbChefe[1] = 5; //Estratégia
@@ -766,7 +889,7 @@ public class Principal {
 				
 				break;
 			case "MEKIES":
-				nome = "Laurent Mekies";
+				nome = "Mekies";
 				
 				atrbChefe[0] = 6; //Liderança
 				atrbChefe[1] = 4; //Estratégia
@@ -778,7 +901,7 @@ public class Principal {
 				
 				break;
 			case "BRAVI":
-				nome = "Alunni Bravi";
+				nome = "Bravi";
 				
 				atrbChefe[0] = 5; //Liderança
 				atrbChefe[1] = 3; //Estratégia
@@ -790,7 +913,7 @@ public class Principal {
 				
 				break;
 			case "KOMATSU":
-				nome = "Ayao Komatsu";
+				nome = "Komatsu";
 				
 				atrbChefe[0] = 5; //Liderança
 				atrbChefe[1] = 7; //Estratégia
@@ -810,8 +933,8 @@ public class Principal {
 		}
 		
 		if ((nome != "") && (atrbChefe[0] != 0)) {
-			return nome + ";" + atrbChefe[0] + ";" + atrbChefe[1] + ";" + atrbChefe[2] + ";" + atrbChefe[3] 
-				 + ";" + mediaAtrb;
+			return nome + ";" + atrbChefe[0] + ";" + atrbChefe[1] + ";" + atrbChefe[2] + ";" + atrbChefe[3] + ";" 
+				+ atrbChefe[4] + ";" + mediaAtrb;
 		}
 		else {
 			return "";
@@ -822,38 +945,47 @@ public class Principal {
 	static void select (int indice) {
 		
 		Random aleatorio = new Random();
-		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "HAMILTON", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
-				"RUSSEL", "ANTONELLI", "VERSTAPPEN", "PEREZ", "HULKENBERG", "BORTOLETO", "TSUNODA", "LAWSOM", "ALBON", "SAINZ"};
-		String atrbPilo[];
-		String confgPilo;
-		int numPil;
+		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "LEWIS", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
+				"RUSSEL", "KIMI", "MAX", "PEREZ", "NICO", "GABRIEL", "YUKI", "LAWSOM", "ALBON", "SAINZ"};
+		String chefes[] = {"HORNER", "WOLFF", "VASSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
+		String carros[] = {"ASTON", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
+		String atrb[];
+		String confg;
+		int num;
 		int tmnAtrb;
 		int numFoi[];
 		
-		if (indice == 1) {
+		if (indice == 1) { //Selecionou a mostragem de pilotos
 			numFoi = new int[3];
 			
+			//Mostrar na tela os pilotos disponiveis
 			for (int i = 1; i <= 3; i++) {
-				numPil = aleatorio.nextInt(1, 20);
+				num = aleatorio.nextInt(1, 20);
 				
+				//Impede repetição de pilotos
 				for (int j = 0; j < numFoi.length; j++) {
-					if (numFoi[j] != 0) {
-						if (numFoi[j] == numPil) {
-							numPil = aleatorio.nextInt(1, 20);
-							j = -1;
-						}
+					if ((num != numFoi[j]) && (numFoi[j] == 0)) {
+						numFoi[j] = num;
+						break;
+					}
+					else if (num == numFoi[j]) {
+						num = aleatorio.nextInt(1, 20);
+						j = -1;
 					}
 				}
-				confgPilo = pilotos(pilotos[numPil - 1]);
-				atrbPilo = confgPilo.split(";");
 				
-				for (int j = 0; j < atrbPilo.length; j++) {
+				//chamando o piloto selecionado
+				confg = pilotos(pilotos[num - 1]);
+				atrb = confg.split(";");
+				
+				//mostrando os atributos do piloto selecionado
+				for (int j = 0; j < atrb.length; j++) {
 					System.out.print("|");
 					tmnAtrb = 0;
 					
 					if (j == 0) {
-						tmnAtrb += atrbPilo[j].length();
-						System.out.printf("%s", atrbPilo[j]);
+						tmnAtrb += atrb[j].length();
+						System.out.printf("%s", atrb[j]);
 						while (tmnAtrb < 7) {
 							System.out.print(" ");
 							tmnAtrb++;
@@ -861,32 +993,171 @@ public class Principal {
 					}
 					else if (j == 1) {
 						System.out.print("  ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
 						System.out.print("  ");
 					}
 					else if (j == 2) {
 						System.out.print("     ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
 						System.out.print("     ");
 					}
 					else if (j == 3) {
 						System.out.print("  ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
 						System.out.print("  ");
 					}
 					else if (j == 4) {
 						System.out.print("  ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
 						System.out.print("   ");
 					}
 					else if (j == 5) {
 						System.out.print("    ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
 						System.out.print("    ");
 					}
 					else {
 						System.out.print("  ");
-						System.out.printf("%s", atrbPilo[j]);
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+				}
+				System.out.println("|");
+			}
+		}
+		else if (indice == 2) { //chamando os chefes
+			numFoi = new int[3];
+			
+			//Mostrar na tela os chefes disponiveis
+			for (int i = 1; i <= 3; i++) {
+				num = aleatorio.nextInt(1, 10);
+				
+				//Impede repetição de chefes
+				for (int j = 0; j < numFoi.length; j++) {
+					if ((num != numFoi[j]) && (numFoi[j] == 0)) {
+						numFoi[j] = num;
+						break;
+					}
+					else if (num == numFoi[j]) {
+						num = aleatorio.nextInt(1, 10);
+						j = -1;
+					}
+				}
+				
+				//chamando o chefe selecionado
+				confg = chefe(chefes[num - 1]);
+				atrb = confg.split(";");
+				
+				//mostrando os atributos do chefe selecionado
+				for (int j = 0; j < atrb.length; j++) {
+					System.out.print("|");
+					tmnAtrb = 0;
+					
+					if (j == 0) {
+						tmnAtrb += atrb[j].length();
+						System.out.printf("%s", atrb[j]);
+						while (tmnAtrb < 7) {
+							System.out.print(" ");
+							tmnAtrb++;
+						}
+					}
+					else if (j == 1) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("  ");
+					}
+					else if (j == 2) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+					else if (j == 3) {
+						System.out.print("    ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("    ");
+					}
+					else if (j == 4) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+					else if (j == 5) {
+						System.out.print("    ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("     ");
+					}
+					else {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+				}
+				System.out.println("|");
+			}
+		}
+		else if (indice == 3) {
+			numFoi = new int[3];
+			
+			//Mostrar na tela os carros disponiveis
+			for (int i = 1; i <= 3; i++) {
+				num = aleatorio.nextInt(1, 10);
+				
+				//Impede repetição de carros
+				for (int j = 0; j < numFoi.length; j++) {
+					if ((num != numFoi[j]) && (numFoi[j] == 0)) {
+						numFoi[j] = num;
+					}
+					else if (num == numFoi[j]) {
+						num = aleatorio.nextInt(1, 10);
+						j = -1;
+					}
+				}
+				
+				//chamando o carro selecionado
+				confg = carro(carros[num - 1]);
+				atrb = confg.split(";");
+				
+				//mostrando os atributos do carro selecionado
+				for (int j = 0; j < atrb.length; j++) {
+					System.out.print("|");
+					tmnAtrb = 0;
+					
+					if (j == 0) {
+						tmnAtrb += atrb[j].length();
+						System.out.printf("%s", atrb[j]);
+						while (tmnAtrb < 8) {
+							System.out.print(" ");
+							tmnAtrb++;
+						}
+					}
+					else if (j == 1) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("  ");
+					}
+					else if (j == 2) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+					else if (j == 3) {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("   ");
+					}
+					else if (j == 4) {
+						System.out.print("    ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("    ");
+					}
+					else if (j == 5) {
+						System.out.print("    ");
+						System.out.printf("%s", atrb[j]);
+						System.out.print("    ");
+					}
+					else {
+						System.out.print("  ");
+						System.out.printf("%s", atrb[j]);
 						System.out.print("   ");
 					}
 				}
@@ -895,4 +1166,188 @@ public class Principal {
 		}
 		
 	}
+	
+	//Função para iniciar o jogo oficialmente
+	static void jogoIni(int numCir, String circs[], String eqpSel[], int atbEqu[][]) {
+		
+		Scanner teclado = new Scanner(System.in);
+		String cicAtual[];
+		String pneuAtu[] = new String[5];
+		String pneu;
+		String chmPneu;
+		boolean pnSelect;
+		int voltParad[];
+		int paradas;
+		int pitBom = 0;
+		int smVol;
+		
+		//iniciando um loop para o game de acordo com os circuitos escolhidos
+		for (int i = 0; i < numCir; i++) {
+			cicAtual = circuito(circs[i].toUpperCase()).split(";"); //definindo o primeiro circuito que o jogadpr escolheu
+			
+			//Pedindo para digitar o número de paradas que deseja
+			limpaTela(1);
+			System.out.println("|=======================================================|");
+			System.out.println("|===Quantas paradas você deseja fazer neste circuito?===|");
+			centerMenu(cicAtual[0].length(), cicAtual[0]);
+			centerMenu(20, "Número de voltas: " + cicAtual[1]);
+			System.out.println("|=======================================================|");
+			System.out.print(" Digite aqui: ");
+			paradas = teclado.nextInt();
+			
+			//Definindo as chances de vitórias de acordo com as paradas selecionadas
+			if (paradas == Integer.parseInt(cicAtual[5])) {
+				pitBom = 90;
+			}
+			else if (paradas > Integer.parseInt(cicAtual[5])) {
+				smVol = paradas - Integer.parseInt(cicAtual[5]);
+				
+				if (smVol >= 2) {
+					pitBom = 60;
+				}
+				else if (smVol == 1) {
+					pitBom = 75;
+				}
+			}
+			else {
+				smVol = Integer.parseInt(cicAtual[5]) - paradas;
+				
+				if (paradas <= 0) {
+					pitBom = 0;
+				}
+				else if (smVol >= 2) {
+					pitBom = 50;
+				}
+				else if (smVol == 1) {
+					pitBom = 70;
+				}
+			}
+			
+			voltParad = new int[paradas];
+			
+			//pedindo para especificar as voltas de cada parada
+			limpaTela(2);
+			System.out.println("|=======================================================|");
+			System.out.println("|=====Digite as voltas que deseja fazer cada parada=====|");
+			centerMenu(20, "Número de voltas: " + cicAtual[1]);
+			System.out.println("|=======================================================|");
+			for (int j = 0; j < voltParad.length; j++) {
+				System.out.printf(" Digite aqui a parada %d: \n", j + 1);
+				voltParad[j] = teclado.nextInt();
+				
+				if ((voltParad[j] > Integer.parseInt(cicAtual[1])) || voltParad[j] <= 0) {
+					System.out.println("|=======================================================|");
+					System.out.println("|===========Volta não existente nesse circuito==========|");
+					System.out.println("|=======================================================|");
+					j--;
+				}
+			}
+			
+			pnSelect = true;
+			
+			//definindo qual pneu será usado no início da corrida
+			while (pnSelect) {
+				limpaTela(2);
+				System.out.println("|=======================================================|");
+				System.out.println("|=====Qual pneu deseja utilizar no iníio da corrida=====|");
+				pneus();
+				System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+				pneu = teclado.next();
+				
+				chmPneu = pneuAtual(pneu);
+				
+				if (chmPneu.equals("")) {
+					System.out.println("|=======================================================|");
+					System.out.println("|=============Pneu inválido digite novamente============|");
+					System.out.println("|=======================================================|");
+				}
+				else {
+					pneuAtu = chmPneu.split(";");
+					pnSelect = false;
+				}
+			}
+			
+			corrida(pneuAtu, circs, eqpSel, atbEqu, pitBom);
+		}
+		
+		teclado.close();
+		
+	}
+	
+	static String pneuAtual(String letPneu) {
+		
+		String nomePneus[] = {"Macio(S)", "Médio(M)", "Duro(H)", "Intermediário(I)", "Chuva(W)"};
+		//atrbindo peneus, cada linha é: Macio(S), Médio(M), Duro(H), Chuva Leve(I), Chuva Pesada(W) 
+		//Cada coluna atributo é: Aderência, Durabilidade(Em voltas), Pista úmida, Pista Molhada
+		int pneus[][] = {
+				{100, 20, 20, 15}, //S
+				{85,  35, 20, 15}, //M
+				{75,  40, 20, 15}, //H
+				{70, 45, 100, 60}, //I
+				{65, 50, 60, 100}  //W
+		};
+		
+		switch (letPneu.toUpperCase()) {
+			case "S":
+				return nomePneus[0] + ";" + pneus[0][0] + ";" + pneus[0][1] + ";" + pneus[0][2] + ";" + pneus[0][3];
+			case "M":
+				return nomePneus[1] + ";" + pneus[1][0] + ";" + pneus[1][1] + ";" + pneus[1][2] + ";" + pneus[1][3];
+			case "H":
+				return nomePneus[2] + ";" + pneus[2][0] + ";" + pneus[2][1] + ";" + pneus[2][2] + ";" + pneus[2][3];
+			case "I":
+				return nomePneus[3] + ";" + pneus[3][0] + ";" + pneus[3][1] + ";" + pneus[3][2] + ";" + pneus[3][3];
+			case "W":
+				return nomePneus[4] + ";" + pneus[4][0] + ";" + pneus[4][1] + ";" + pneus[4][2] + ";" + pneus[4][3];
+			default:
+				return "";
+		}
+		
+	}
+	
+	static void corrida(String pnAtu[], String circu[], String eqSele[], int atEqp[][], int pitBm) {
+		
+		Random aleatorio = new Random();
+		Scanner teclado = new Scanner(System.in);
+		String carros[] = {"ASTON", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
+		String chefes[] = {"HORNER", "WOLFF", "VASSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
+		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "LEWIS", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
+				"RUSSEL", "KIMI", "MAX", "PEREZ", "NICO", "GABRIEL", "YUKI", "LAWSOM", "ALBON", "SAINZ"};
+		String pilVol[];
+		String pilStan;
+		int pils[] = new int[10];
+		int ovrParc;
+		int ovrlEqp = 0;
+		int sftCar;
+		int chvLev;
+		int chvPes;
+		int cont = 0;
+		
+		for (int i = 0; i < atEqp.length; i++) {
+			ovrlEqp += atEqp[i][6];
+		}
+		
+		ovrlEqp /= 4;
+		
+		for (int i = 0; i < pilotos.length; i += 2) {
+			ovrParc = 0;
+			
+			for (int j = i; j < i + 2; j++) {
+				pilStan = pilotos(pilotos[j]);
+				pilVol = pilStan.split(";");
+				
+				ovrParc += Integer.parseInt(pilVol[6]); 
+			}
+			
+			pils[cont] = ovrParc /= 2;
+			cont++;
+		}
+		
+		for (int i = 1; i <= Integer.parseInt(circu[1]); i ++) {
+			
+		}
+		
+		teclado.close();
+		
+	}
+	
 }
