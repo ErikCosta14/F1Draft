@@ -1,6 +1,7 @@
 package game;
 
 import java.util.Scanner;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Principal {
@@ -8,13 +9,8 @@ public class Principal {
 	public static void main(String[] args) {
 		
 		Scanner teclado = new Scanner(System.in);
-		Random aleatorio = new Random();
 		//vetores para atribuir os códigos deacesso dos vetores de banco de dados
 		String circuitos[] = {"BRASIL", "BAHREIN", "INGLATERRA", "AUSTRIA", "ESPANHA", "MONACO", "BELGICA", "ITALIA", "EMILIA-ROMAGNHA", "JAPAO"};
-		String carros[] = {"ASTON", "ALPINE", "FERRARI", "HAAS", "MCLAREN", "MERCEDES", "REDBULL", "SAUBER", "VCARB", "WILLIANS"};
-		String chefes[] = {"HORNER", "WOLFF", "VASSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
-		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "LEWIS", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
-				"RUSSEL", "KIMI", "MAX", "PEREZ", "NICO", "GABRIEL", "YUKI", "LAWSOM", "ALBON", "SAINZ"};
 		String circJogo[];
 		String equipSel[] = new String[4];
 		String confgCirc;
@@ -34,10 +30,12 @@ public class Principal {
 		while(menu) {
 			limpaTela(2);
 			System.out.println("|=======================================================|");
-			System.out.println("|===================MENU PRINCIPAL======================|");
+			System.out.println("|=======================F1 DRAFT========================|");
 			System.out.println("|=======================================================|");
-			System.out.println("|                     1 - JOGAR                         |");
-			System.out.println("|                     2 - SAIR                          |");
+			System.out.println("|====================MENU PRINCIPAL=====================|");
+			System.out.println("|=======================================================|");
+			System.out.println("|                      1 - JOGAR                        |");
+			System.out.println("|                      2 - SAIR                         |");
 			System.out.println("|=======================================================|");
 			System.out.print(" Digite a opção que deseja(Apenas números): ");
 			opcPrinc = teclado.nextInt();
@@ -144,6 +142,15 @@ public class Principal {
 						//configurações terminadas
 						
 						jogoIni(numCirc, circJogo, equipSel, atrbEquip); //chamando a função para iniciar o jogo
+						
+						//Me despedindo do jogador :)
+						limpaTela(1);
+						System.out.println("|=======================================================|");
+						System.out.println("|=================OBRIGADO POR JOGAR ^_^================|");
+						System.out.println("|=======================================================|");
+						limpaTela(2);
+						
+						menu = false; //Acabando o jogo
 					}
 					
 					break;
@@ -1267,7 +1274,7 @@ public class Principal {
 				}
 			}
 			
-			corrida(pneuAtu, circs, eqpSel, atbEqu, pitBom);
+			corrida(pneuAtu, cicAtual, eqpSel, atbEqu, pitBom, voltParad);
 		}
 		
 		teclado.close();
@@ -1304,7 +1311,7 @@ public class Principal {
 		
 	}
 	
-	static void corrida(String pnAtu[], String circu[], String eqSele[], int atEqp[][], int pitBm) {
+	static void corrida(String pnAtu[], String circu[], String eqSele[], int atEqp[][], int pitBm, int parad[]) {
 		
 		Random aleatorio = new Random();
 		Scanner teclado = new Scanner(System.in);
@@ -1312,22 +1319,52 @@ public class Principal {
 		String chefes[] = {"HORNER", "WOLFF", "VASSEUR", "BROWN", "KRACK", "FAMIN", "VOWLES", "MEKIES", "BRAVI", "KOMATSU"};
 		String pilotos[] = {"ALONSO", "STROLL", "GASLY", "DOOHAN", "LECLERC", "LEWIS", "BEARMAN", "OCON", "NORRIS", "PIASTRI",
 				"RUSSEL", "KIMI", "MAX", "PEREZ", "NICO", "GABRIEL", "YUKI", "LAWSOM", "ALBON", "SAINZ"};
+		String carVol[];
 		String pilVol[];
+		String chfVol[];
+		String pilsPosFnl[] = new String[22];
+		String carsFnl[] = new String[11];
+		String carsFnlVol[] = new String[11];
 		String pilStan;
+		String carStan;
+		String chfStan;
+		String pneu;
+		String chmPn;
+		String pts;
+		String continuar;
+		boolean chvLv;
+		boolean chvPs;
+		boolean slcPn;
+		double pontCars[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		double pontPils[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		double pontPilEq[] = {0, 0};
+		double posFinal[] = new double[22];
+		double pontCarsFnl[] = new double[11];
+		double pontCarsDef[] = new double[11];
+		double somVol;
+		double pontEqp = 0;
 		int pils[] = new int[10];
+		int vltSaf[] = new int[2];
+		int vltChvLev[] = new int[2];
+		int vltChvPes[] = new int[2];
 		int ovrParc;
 		int ovrlEqp = 0;
 		int sftCar;
 		int chvLev;
 		int chvPes;
 		int cont = 0;
+		int contPil = 0;
+		int box;
+		int pon;
 		
+		//definindo o overal geral da equipe selecionada
 		for (int i = 0; i < atEqp.length; i++) {
-			ovrlEqp += atEqp[i][6];
+			ovrlEqp += atEqp[i][5];
 		}
 		
 		ovrlEqp /= 4;
 		
+		//Definindo o overal das outras equipes
 		for (int i = 0; i < pilotos.length; i += 2) {
 			ovrParc = 0;
 			
@@ -1342,12 +1379,640 @@ public class Principal {
 			cont++;
 		}
 		
-		for (int i = 1; i <= Integer.parseInt(circu[1]); i ++) {
+		//Aleatoriezando as possibilidades de Safety Car, Chuva, Chuva pesada
+		sftCar = aleatorio.nextInt(0, 100);
+		chvLev = aleatorio.nextInt(0, 100);
+		chvPes = aleatorio.nextInt(0, 100);
+		
+		//Definindo a volta de inicio e fim do safety car
+		if (sftCar <= Integer.parseInt(circu[2])) {
+			for (int i = 0; i < vltSaf.length; i++) {
+				vltSaf[i] = aleatorio.nextInt(1, Integer.parseInt(circu[1]));
+			}
 			
+			if (vltSaf[0] > vltSaf[1]) {
+				vltSaf[0] = vltSaf[1];
+				vltSaf[1] = vltSaf[0];
+			}
 		}
+		
+		//Definindo a volta de inicio e fim do safety car
+		if (chvLev <= Integer.parseInt(circu[3])) {
+			for (int i = 0; i < vltChvLev.length; i++) {
+				vltChvLev[i] = aleatorio.nextInt(1, Integer.parseInt(circu[1]));
+			}
+			
+			if (vltChvLev[0] > vltChvLev[1]) {
+				vltChvLev[0] = vltChvLev[1];
+				vltChvLev[1] = vltChvLev[0];
+			}
+		}
+		
+		//Definindo a volta de inicio e fim do safety car
+		if (chvPes <= Integer.parseInt(circu[3])) {
+			for (int i = 0; i < vltChvPes.length; i++) {
+				vltChvPes[i] = aleatorio.nextInt(1, Integer.parseInt(circu[1]));
+			}
+			
+			if (vltChvPes[0] > vltChvPes[1]) {
+				vltChvPes[0] = vltChvPes[1];
+				vltChvPes[1] = vltChvPes[0];
+			}
+		}
+		
+		chvLv = false;
+		chvPs = false;
+		pontEqp += pitBm;
+		
+		//Iniciando a corrida a partir da primeira volta
+		for (int i = 1; i <= Integer.parseInt(circu[1]); i ++) {
+			limpaTela(1);
+			System.out.printf("|Volta %d/%d|\n", i, Integer.parseInt(circu[1]));
+			//Equipe pontuando de acordo com os pneus e condições atuais
+			if (chvLv) {
+				if (pnAtu[0].equals("Intermediário(I)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]);
+				}
+				else if (pnAtu[0].equals("Chuva(W)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]) - 20;
+				}
+				else {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]) - 30;
+				}
+			}
+			else if (chvPs) {
+				if (pnAtu[0].equals("Intermediário(I)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]) - 20;
+				}
+				else if (pnAtu[0].equals("Chuva(W)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]);
+				}
+				else {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) + Integer.parseInt(pnAtu[3]) - 30;
+				}
+			}
+			else {
+				if (pnAtu[0].equals("Intermediário(I)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2]));
+				}
+				else if (pnAtu[0].equals("Chuva(W)")) {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2])) - 30;
+				}
+				else {
+					pontEqp += (Integer.parseInt(pnAtu[1])/Integer.parseInt(pnAtu[2]));
+				}
+			}
+			
+			//Quando a volta chegar na volta definida para o Safety Car
+			if (i == vltSaf[0]) {
+				System.out.println("|=======================================================|");
+				System.out.println("|=========Surgiu um Safety Car, deseja parar?===========|");
+				System.out.print(" (1 - Sim, 2 - Não): ");
+				box = teclado.nextInt();
+				
+				if (box == 1) {
+					pontEqp += 10;
+					slcPn = true;
+				}
+				else {
+					slcPn = false;
+				}
+				
+				//definindo qual pneu será usado quando entrar o Safety Car
+				while (slcPn) {
+					limpaTela(2);
+					System.out.println("|=======================================================|");
+					System.out.println("|===Qual pneu deseja utilizar a partir do Safety Car?===|");
+					pneus();
+					System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+					pneu = teclado.next();
+					
+					chmPn = pneuAtual(pneu);
+					
+					if (chmPn.equals("")) {
+						System.out.println("|=======================================================|");
+						System.out.println("|=============Pneu inválido digite novamente============|");
+						System.out.println("|=======================================================|");
+					}
+					else {
+						pnAtu = chmPn.split(";");
+						slcPn = false;
+					}
+				}
+			}
+			
+			if (i == vltSaf[1]) {
+				System.out.println("|=======================================================|");
+				System.out.println("|==================Saindo o Safety Car!=================|");
+				System.out.println("|=======================================================|");
+			}
+			
+			//Quando a volta chegar na volta definida para a chuva
+			if (i == vltChvLev[0]) {
+				chvLv = true;
+				
+				System.out.println("|=======================================================|");
+				System.out.println("|=========Começou uma chuva leve, deseja parar?=========|");
+				System.out.print(" (1 - Sim, 2 - Não): ");
+				box = teclado.nextInt();
+				
+				if (box == 1) {
+					pontEqp += 20;
+					slcPn = true;
+				}
+				else {
+					slcPn = false;
+				}
+				
+				//definindo qual pneu será usado durante a chuva leve
+				while (slcPn) {
+					limpaTela(2);
+					System.out.println("|=======================================================|");
+					System.out.println("|===Qual pneu deseja utilizar a chuva leve?===|");
+					pneus();
+					System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+					pneu = teclado.next();
+					
+					chmPn = pneuAtual(pneu);
+					
+					if (chmPn.equals("")) {
+						System.out.println("|=======================================================|");
+						System.out.println("|=============Pneu inválido digite novamente============|");
+						System.out.println("|=======================================================|");
+					}
+					else {
+						pnAtu = chmPn.split(";");
+						slcPn = false;
+					}
+				}
+			}
+			
+			//Quando a chuva leve parar
+			if (i == vltChvLev[1]) {
+				chvLv = false;
+				
+				System.out.println("|=======================================================|");
+				System.out.println("|==========A chuva leve terminou deseja parar?==========|");
+				System.out.print(" (1 - Sim, 2 - Não): ");
+				box = teclado.nextInt();
+				
+				if (box == 1) {
+					pontEqp += 20;
+					slcPn = true;
+				}
+				else {
+					slcPn = false;
+				}
+				
+				//definindo qual pneu será usado durante a chuva leve
+				while (slcPn) {
+					limpaTela(2);
+					System.out.println("|=======================================================|");
+					System.out.println("|===Qual pneu deseja utilizar agora?===|");
+					pneus();
+					System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+					pneu = teclado.next();
+					
+					chmPn = pneuAtual(pneu);
+					
+					if (chmPn.equals("")) {
+						System.out.println("|=======================================================|");
+						System.out.println("|=============Pneu inválido digite novamente============|");
+						System.out.println("|=======================================================|");
+					}
+					else {
+						pnAtu = chmPn.split(";");
+						slcPn = false;
+					}
+				}
+			}
+			
+			//Quando chegar a uma volta de chuva pesada
+			if (i == vltChvPes[0]) {
+				chvPs = true;
+				
+				System.out.println("|=======================================================|");
+				System.out.println("|========Começou uma chuva pesada, deseja parar?========|");
+				System.out.print(" (1 - Sim, 2 - Não): ");
+				box = teclado.nextInt();
+				
+				if (box == 1) {
+					pontEqp += 20;
+					slcPn = true;
+				}
+				else {
+					slcPn = false;
+				}
+				
+				//definindo qual pneu será usado durante a chuva pesada
+				while (slcPn) {
+					limpaTela(2);
+					System.out.println("|=======================================================|");
+					System.out.println("|===Qual pneu deseja utilizar durante a chuva pesada?===|");
+					pneus();
+					System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+					pneu = teclado.next();
+					
+					chmPn = pneuAtual(pneu);
+					
+					if (chmPn.equals("")) {
+						System.out.println("|=======================================================|");
+						System.out.println("|=============Pneu inválido digite novamente============|");
+						System.out.println("|=======================================================|");
+					}
+					else {
+						pnAtu = chmPn.split(";");
+						slcPn = false;
+					}
+				}
+			}
+			
+			//Quando a chuva pesada parar
+			if (i == vltChvPes[1]) {
+				chvPs = true;
+				
+				System.out.println("|=======================================================|");
+				System.out.println("|========A chuva pesada terminou, deseja parar?=========|");
+				System.out.print(" (1 - Sim, 2 - Não): ");
+				box = teclado.nextInt();
+				
+				if (box == 1) {
+					pontEqp += 20;
+					slcPn = true;
+				}
+				else {
+					slcPn = false;
+				}
+				
+				//definindo qual pneu será usado quando a chuva parar
+				while (slcPn) {
+					limpaTela(2);
+					System.out.println("|=======================================================|");
+					System.out.println("|============Qual pneu deseja utilizar agora?===========|");
+					pneus();
+					System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+					pneu = teclado.next();
+					
+					chmPn = pneuAtual(pneu);
+					
+					if (chmPn.equals("")) {
+						System.out.println("|=======================================================|");
+						System.out.println("|=============Pneu inválido digite novamente============|");
+						System.out.println("|=======================================================|");
+					}
+					else {
+						pnAtu = chmPn.split(";");
+						slcPn = false;
+					}
+				}
+			}
+			
+			//caso tenha chegado a volta que o player selecionou para parar
+			for (int j = 0; j < parad.length; j++) {
+				if (i == parad[j]) {
+					System.out.println("|=======================================================|");
+					System.out.println("|====A volta da sua parada chegou deseja continuar?=====|");
+					System.out.println("|=============Situação dos pneus atuais=================|");
+					System.out.println("|      NOME      | ADER | DURAB | CHUV LEVE | CHUV PESA |");
+					if(pnAtu[0].equals("Macio(S)")) {
+						System.out.printf("|    %s    |  %s |  %s   |    %s     |    %s     |\n", pnAtu[0], pnAtu[1], 
+								pnAtu[2], pnAtu[3], pnAtu[4]);
+					}
+					else if (pnAtu[0].equals("Médio(M)")) {
+						System.out.printf("|    %s    |  %s  |  %s   |    %s     |    %s     |\n", pnAtu[0], pnAtu[1], 
+								pnAtu[2], pnAtu[3], pnAtu[4]);
+					}
+					else if (pnAtu[0].equals("Duro(H)")) {
+						System.out.printf("|    %s     |  %s  |  %s   |    %s     |    %s     |\n", pnAtu[0], pnAtu[1], 
+								pnAtu[2], pnAtu[3], pnAtu[4]);
+					}
+					else if (pnAtu[0].equals("Intermediário(I)")){
+						System.out.printf("|%s|  %s  |  %s   |    %s    |    %s     |\n", pnAtu[0], pnAtu[1], 
+								pnAtu[2], pnAtu[3], pnAtu[4]);
+					}
+					else {
+						System.out.printf("|     %s   |  %s  |  %s   |    %s     |    %s    |\n", pnAtu[0], pnAtu[1], 
+								pnAtu[2], pnAtu[3], pnAtu[4]);
+					}
+					System.out.println("|=======================================================|");
+					System.out.print(" (1 - Sim, 2 - Não): ");
+					box = teclado.nextInt();
+					
+					if (box == 1) {
+						//verificando se foi uma boa parada ou não
+						if(Integer.parseInt(pnAtu[2]) < 10) {
+							pontEqp += 20;
+						}
+						else {
+							pontEqp -= 40;
+						}
+						slcPn = true;
+					}
+					else {
+						slcPn = false;
+					}
+					
+					while (slcPn) {
+						System.out.println("|=======================================================|");
+						System.out.println("|============Qual pneu deseja utilizar agora?===========|");
+						pneus();
+						System.out.print(" Digite aqui(Apenas a letra ex: 'M'): ");
+						pneu = teclado.next();
+						
+						chmPn = pneuAtual(pneu);
+						
+						if (chmPn.equals("")) {
+							System.out.println("|=======================================================|");
+							System.out.println("|=============Pneu inválido digite novamente============|");
+							System.out.println("|=======================================================|");
+						}
+						else {
+							pnAtu = chmPn.split(";");
+							slcPn = false;
+						}
+					}
+				}
+			}
+		}
+		
+		//atribuindo pontuações para posteriormente definir as posições na corrida
+		for (int i = 0; i < carros.length; i++) {
+			carStan = carro(carros[i]);
+			carVol = carStan.split(";");
+			
+			chfStan = chefe(chefes[i]);
+			chfVol = chfStan.split(";");
+			
+			for (int j = 0; j < 2; j++) {
+				pilStan = pilotos(pilotos[contPil]);
+				pilVol = pilStan.split(";");
+				
+				pontPils[contPil] += pontEqp * Integer.parseInt(carVol[6]) * Integer.parseInt(pilVol[6]) * Integer.parseInt(chfVol[6]) * pils[i];
+				
+				if (Integer.parseInt(pilVol[6]) > 8) {
+					pontPils[contPil] += 2000 * aleatorio.nextDouble(0, 1000);;
+				}
+				else if (Integer.parseInt(pilVol[6]) > 6) {
+					pontPils[contPil] += 1000 * aleatorio.nextDouble(0, 1000);;
+				}
+				else if (Integer.parseInt(pilVol[6]) > 4) {
+					pontPils[contPil] -= 1000 * aleatorio.nextDouble(0, 1000);;
+				}
+				else {
+					pontPils[contPil] -= 4000 * aleatorio.nextDouble(0, 1000);;
+				}
+				
+				contPil++;
+			}
+		}
+		
+		for (int i = 0; i < pontPilEq.length; i++) {
+			pontPilEq[i] = 1;
+			
+			for (int j = 0; j < atEqp.length; j++) {
+				pontPilEq[i] *= atEqp[j][5];
+			}
+			
+			pontPilEq[i] *= ovrlEqp;
+			
+			if (atEqp[i][5] > 8) {
+				pontPilEq[i] += 2000 * aleatorio.nextDouble(0, 1000);
+			}
+			else if (atEqp[i][5] > 6) {
+				pontPilEq[i] += 1000 * aleatorio.nextDouble(0, 1000);;
+			}
+			else if (atEqp[i][5] > 4) {
+				pontPilEq[i] -= 1000 * aleatorio.nextDouble(0, 1000);;
+			}
+			else {
+				pontPilEq[i] -= 4000 * aleatorio.nextDouble(0, 1000);;
+			}
+		}
+		
+		for (int i = 0; i < pontPils.length; i++) {
+			posFinal[i] = pontPils[i];
+		}
+		
+		posFinal[20] = pontPilEq[0];
+		posFinal[21] = pontPilEq[1];
+		
+		//Definindo as posições das equipes
+		contPil = 0;
+		for (int i = 0; i < pontCars.length; i++) {
+			for (int j = 0; j < 2; j++) {
+				pontCars[i] += posFinal[contPil];
+				pontCarsFnl[i] += posFinal[contPil];
+				contPil++;
+			}
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			carStan = carro(carros[i]);
+			carVol = carStan.split(";");
+			
+			carsFnlVol[i] = carVol[0];
+		}
+		
+		carsFnlVol[10] = eqSele[3] + "(Player)";
+		
+		Arrays.sort(posFinal);
+		Arrays.sort(pontCars);
+		
+		//Define sequencia real das equipes
+		for (int i = 0; i < pontCars.length; i++) {
+			for (int j = 0; j < pontCarsFnl.length; j++) {
+				if (pontCars[i] == pontCarsFnl[j]) {
+					carsFnl[i] = carsFnlVol[j];
+				}
+			}
+		}
+		
+		for (int i = 0; i < pontPils.length; i++) {
+			for (int j = 0; j < posFinal.length; j++) {
+				if (pontPils[i] == posFinal[j]) {
+					pilStan = pilotos(pilotos[i]);
+					pilVol = pilStan.split(";");
+					
+					pilsPosFnl[j] = pilVol[0];
+				}
+			}
+		}
+		
+		for (int i = 0; i < pontPilEq.length; i++) {
+			for (int j = 0; j < posFinal.length; j++) {
+				if (pontPilEq[i] == posFinal[j]) {
+					
+					pilsPosFnl[j] = eqSele[i] + "(Player)";
+				}
+			}
+		}
+		
+		//Definindo a pontuação dos pilotos
+		for (int i = 21; i >= 0; i--) {
+			if (i == 21) {
+				posFinal[i] = 25;
+			}
+			else if (i == 20) {
+				posFinal[i] = 18;
+			}
+			else if (i == 19) {
+				posFinal[i] = 15;
+			}
+			else if (i == 18) {
+				posFinal[i] = 12;
+			}
+			else if (i == 17) {
+				posFinal[i] = 10;
+			}
+			else if (i == 16) {
+				posFinal[i] = 8;
+			}
+			else if (i == 15) {
+				posFinal[i] = 6;
+			}
+			else if (i == 14) {
+				posFinal[i] = 4;
+			}
+			else if (i == 13) {
+				posFinal[i] = 2;
+			}
+			else if (i == 12) {
+				posFinal[i] = 1;
+			}
+			else {
+				posFinal[i] = 0;
+			}
+		}
+		
+		//atribuindo as pontuações dos carros para o padrão F1
+		cont = 0;
+		contPil = 0;
+		for (int i = 0; i < 20; i++) {
+			somVol = 0;
+			
+			for (int j = 0; j < 2; j++) {
+				if (contPil > 19) {
+					break;
+				}
+				else {
+					pilStan = pilotos(pilotos[contPil]);
+					pilVol = pilStan.split(";");
+					
+					for (int k = 0; k < pilsPosFnl.length; k++) {
+						if (pilsPosFnl[k].equals(pilVol[0])) {
+							somVol += posFinal[k];
+						}
+					}
+					contPil++;
+				}
+			}
+			
+			if (cont > 9) {
+				break;
+			}
+			else {
+				carStan = carro(carros[cont]);
+				carVol = carStan.split(";");
+				
+				for (int j = 0; j < carsFnl.length; j++) {
+					if (carsFnl[j].equals(carVol[0])) {
+						pontCars[j] = somVol;
+						
+						cont++;
+					}
+				}
+			}
+		}
+			
+		//definindo a pontuação real da equipe do player
+		somVol = 0;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < pilsPosFnl.length; j++) {
+				pilStan = eqSele[i] + "(Player)";
+				
+				if (pilStan.equals(pilsPosFnl[j])) {
+					somVol += posFinal[j];
+				}
+			}
+		}
+		
+		for (int i = 0; i < carsFnl.length; i++) {
+			carStan = eqSele[3] + "(Player)";
+			
+			if(carsFnl[i].equals(carStan)) {
+				pontCars[i] = somVol;
+			}
+		}
+		
+		for (int i = 0; i < pontCars.length; i++) {
+			pontCarsDef[i] = pontCars[i];
+		}
+		
+		//mostrando a tabela da corrida
+		System.out.println("|=======================================================|");
+		System.out.println("|=================CAMPEONATO DE PILOTOS=================|");
+		System.out.println("|         PILOTOS          |          PONTUAÇÃO         |");
+		System.out.println("|-------------------------------------------------------|");
+		for (int i = pilsPosFnl.length - 1; i >= 0; i--) {
+			pon = (int)posFinal[i];
+			pts = Integer.toString(pon);
+			tabela(pilsPosFnl[i], pilsPosFnl[i].length(), posFinal[i], pts.length());
+		}
+		System.out.println("|=======================================================|");
+		System.out.println("|================CAMPEONATO DE CONSTRUTORES=============|");
+		System.out.println("|         EQUIPES          |          PONTUAÇÃO         |");
+		System.out.println("|-------------------------------------------------------|");
+		for (int i = carsFnl.length - 1; i >= 0; i--) {
+			pon = (int)pontCars[i];
+			pts = Integer.toString(pon);
+			
+			tabela(carsFnl[i], carsFnl[i].length(), pontCars[i], pts.length());
+		}
+		System.out.println("|=======================================================|");
+		System.out.print(" Aperte algum botão para continuar: ");
+		continuar = teclado.next();
 		
 		teclado.close();
 		
+	}
+	
+	//função para mostrar a tabela final da corrida
+	static void tabela(String nome, int tmnPri, double pont, int tmnPont) {
+		
+		int tmnPr;
+		int tmn;
+		int tmnPonUm;
+		int tmnPonDois;
+		int divTmn;
+		int modTmn;
+		
+		tmnPr = 26 - tmnPri;
+		tmnPr -= 9;
+		
+		System.out.print("|");
+		System.out.printf("         %s", nome);
+		for (int i = 0; i < tmnPr; i++) {
+			System.out.print(" ");
+		}
+		
+		System.out.print("|");
+		
+		tmn = 28 - tmnPont;
+		divTmn = tmn/2;
+		modTmn = tmn%2;
+		
+		tmnPonUm = divTmn;
+		tmnPonDois = divTmn + modTmn;
+		
+		for (int i = 0; i < tmnPonUm; i++) {
+			System.out.print(" ");
+		}
+		System.out.printf("%.0f", pont);
+		for (int i = 0; i < tmnPonDois; i++) {
+			System.out.print(" ");
+		}
+		
+		System.out.print("|\n");
 	}
 	
 }
